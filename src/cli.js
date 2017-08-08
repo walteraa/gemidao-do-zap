@@ -9,11 +9,28 @@ const emitSuccess = message => console.log(green(` ✔ Sucesso: ${message}`));
 const emitError = message => console.log(red(` ✗ Erro: ${message}`));
 
 function cli(args) {
-    gemidao(args)
-        .then(() => {
-            emitSuccess(args.sms ? 'sms enviado!' : 'chamada efetuada!');
-        })
-        .catch(pipe(prop('message'), emitError));
+    if(args.bidirecional){
+      send(args);
+      var temp = args.de;
+      args.de = args.para;
+      args.para = temp;
+      send(args);
+    }else{
+      send(args);
+    }
+
+}
+
+function bidirecional(args){
+
+}
+
+function send(arg){
+      gemidao(arg)
+          .then(() => {
+              emitSuccess(arg.sms ? 'sms enviado!' : 'chamada efetuada!');
+          })
+          .catch(pipe(prop('message'), emitError));
 }
 
 cli(yargs
@@ -32,6 +49,10 @@ cli(yargs
     })
     .option('sms', {
         describe: 'Se definido, será enviado um SMS ao invés de uma chamada',
+        type: 'boolean'
+    })
+    .option('bidirecional', {
+        describe: 'Defini se a chamada deve ser enviada para ambos os números',
         type: 'boolean'
     })
     .demandOption(['para', 'token'])
