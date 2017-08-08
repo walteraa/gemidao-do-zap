@@ -9,24 +9,19 @@ const emitSuccess = message => console.log(green(` ✔ Sucesso: ${message}`));
 const emitError = message => console.log(red(` ✗ Erro: ${message}`));
 
 function cli(args) {
-    if(args.bidirecional){
-      send(args);
-      var temp = args.de;
-      args.de = args.para;
-      args.para = temp;
-      send(args);
-    }else{
-      send(args);
+    if (args.bidirecional) {
+        send(args);
+        const temp = args.de;
+        args.de = args.para;
+        args.para = temp;
+        send(args);
+    } else {
+        send(args);
     }
-
 }
 
-function bidirecional(args){
-
-}
-
-function send(arg){
-      gemidao(arg)
+function send(arg) {
+    gemidao(arg)
           .then(() => {
               emitSuccess(arg.sms ? 'sms enviado!' : 'chamada efetuada!');
           })
