@@ -52,7 +52,7 @@ cli(yargs
         type: 'boolean'
     })
     .option('bidirecional', {
-        describe: 'Defini se a chamada deve ser enviada para ambos os números',
+        describe: 'Se definido, realiza uma nova ligação, desta vez com o de/para invertidos',
         type: 'boolean'
     })
     .demandOption(['para', 'token'])
