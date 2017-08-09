@@ -16,7 +16,10 @@ const sms = (to, token) => request.post(route('/sms'))
 const call = (from, to, token) => request.post(route('/composto'))
     .set('Access-Token', token)
     .set('Accept', 'application/json')
-    .send({
+    .send(msg_data(from, to));
+
+function msg_data(from, to) {
+    return {
         numero_destino: to,
         dados: [
             {
@@ -27,7 +30,8 @@ const call = (from, to, token) => request.post(route('/composto'))
             }
         ],
         bina: from
-    });
+    };
+}
 
 export default function gemidao(args) {
     if (!/^[a-f0-9]{32}$/.test(args.token)) {
@@ -40,7 +44,9 @@ export default function gemidao(args) {
 
     const action = args.sms
         ? sms(args.para, args.token)
-        : call(args.de, args.para, args.token);
+        : (args.bidirecional
+            ? call(args.de, args.para, args.token)
+            : call(args.de, args.para, args.token).send(msg_data(args.para, args.de)));
 
     return action
         .catch(err => {
